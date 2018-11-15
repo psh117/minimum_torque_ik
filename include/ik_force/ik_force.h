@@ -9,7 +9,6 @@
 #include "ik_force/robot_model/robot_model.h"
 #include "ik_force/optimization/ik_optimization_var_constr_cost.h"
 
-
 struct TargetTransformWrench
 {
   Eigen::Affine3d transform_; ///< Target transform w.r.t. world frame

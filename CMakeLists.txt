@@ -11,38 +11,38 @@ find_package(RBDL REQUIRED)
 find_package(catkin REQUIRED
   roscpp
   ifopt
-)
+  )
 
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES ik_force
-#  CATKIN_DEPENDS other_catkin_pkg
-#  DEPENDS system_lib
-)
+  INCLUDE_DIRS include
+  LIBRARIES ik_force
+  CATKIN_DEPENDS roscpp #ifopt
+  # DEPENDS system_lib
+  )
 
 ###########
 ## Build ##
 ###########
 
 include_directories(
- include
- ${catkin_INCLUDE_DIRS}
- ${RBDL_INCLUDE_DIR}
-)
+  include
+  ${catkin_INCLUDE_DIRS}
+  ${RBDL_INCLUDE_DIR}
+  )
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
   src/${PROJECT_NAME}/ik_force.cpp
   src/${PROJECT_NAME}/robot_model/franka_panda_model.cpp
   src/${PROJECT_NAME}/optimization/ik_optimization_var_constr_cost.cpp
-)
+  )
 
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 target_link_libraries(${PROJECT_NAME}
   ${catkin_LIBRARIES}
   ${RBDL_LIBRARY}
-)
+  )
 
 #############
 ## Install ##
@@ -63,14 +63,14 @@ install(TARGETS ${PROJECT_NAME}
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-)
+  )
 
 ## Mark cpp header files for installation
 install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.h"
   PATTERN ".svn" EXCLUDE
-)
+  )
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 # install(FILES
