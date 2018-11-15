@@ -89,10 +89,10 @@ private:
   RobotModelPtr model_;
 };
 
-class IkConstraint2 : public ConstraintSet {
+class IkConstraintPosition : public ConstraintSet {
 public:
-  IkConstraint2(RobotModelPtr& model) : IkConstraint2(model, "ik_constraint2") {}
-  IkConstraint2(RobotModelPtr& model, const std::string& name) :
+  IkConstraintPosition(RobotModelPtr& model) : IkConstraintPosition(model, "ik_constraint_position") {}
+  IkConstraintPosition(RobotModelPtr& model, const std::string& name) :
     ConstraintSet(3, name),
     model_(model) {}
 
@@ -101,6 +101,8 @@ public:
     VectorXd q;
     q = GetVariables()->GetComponent("ik_joint_var_set")->GetValues();
     Eigen::Vector3d g = model_->getTranslation(q);
+    std::cout << "getTranslation" << std::endl;
+    std::cout << g.transpose() << std::endl;
     return g;
   }
 
@@ -137,7 +139,7 @@ public:
 private:
   RobotModelPtr model_;
   Eigen::Vector3d target_translation_;
-  double epsilon_ {0.001};  ///< IK solution precision
+  double epsilon_ {0.0001};  ///< IK solution precision
 };
 
 class IkConstraintOrientation : public ConstraintSet {
@@ -158,12 +160,12 @@ public:
     Eigen::VectorXd g(1);
     g(0) = (rot_diff-Eigen::Matrix3d::Identity()).row(2).norm();
     Eigen::Vector3d delphi = target_orientation_ * model_->getPhi(target_orientation_, cur_rot);
-//    std::cout << "target_orientation_" << std::endl;
-//    std::cout << target_orientation_ << std::endl;
-//    std::cout << "cur_rot" << std::endl;
-//    std::cout << cur_rot << std::endl;
-//    std::cout << "rot_diff" << std::endl;
-//    std::cout << rot_diff << std::endl;
+    std::cout << "target_orientation_" << std::endl;
+    std::cout << target_orientation_ << std::endl;
+    std::cout << "cur_rot" << std::endl;
+    std::cout << cur_rot << std::endl;
+    std::cout << "rot_diff" << std::endl;
+    std::cout << rot_diff << std::endl;
     return g;
   }
 
@@ -207,7 +209,7 @@ public:
 private:
   RobotModelPtr model_;
   Eigen::Matrix3d target_orientation_;
-  double epsilon_ {0.001};  ///< IK solution precision
+  double epsilon_ {0.01};  ///< IK solution precision
 };
 
 class IkCost: public CostTerm {

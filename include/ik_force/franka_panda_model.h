@@ -29,6 +29,7 @@ private:
   void initModel();
 
   RigidBodyDynamics::Math::Vector3d com_position_[kDof];
+  RigidBodyDynamics::Math::Vector3d ee_position_;
   Eigen::Vector3d joint_posision_[kDof];
 
   std::shared_ptr<RigidBodyDynamics::Model> model_;

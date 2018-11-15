@@ -1,4 +1,4 @@
-#include "franka_panda_model/franka_panda_model.h"
+#include "ik_force/franka_panda_model.h"
 #include <Eigen/Geometry>
 
 
@@ -12,7 +12,7 @@ Eigen::MatrixXd FrankaPandaModel::getJacobianMatrix(const Eigen::VectorXd &q)
   Eigen::MatrixXd j_temp;
   j_temp.setZero(6,kDof);
   Eigen::Matrix<double, 6, kDof> j;
-  RigidBodyDynamics::CalcPointJacobian6D(*model_, q, body_id_[kDof - 1], com_position_[kDof - 1], j_temp, true);
+  RigidBodyDynamics::CalcPointJacobian6D(*model_, q, body_id_[kDof - 1], ee_position_, j_temp, true);
 
   for (int i = 0; i<2; i++)
   {
@@ -24,7 +24,7 @@ Eigen::MatrixXd FrankaPandaModel::getJacobianMatrix(const Eigen::VectorXd &q)
 
 Eigen::Vector3d FrankaPandaModel::getTranslation(const Eigen::VectorXd &q)
 {
-  return RigidBodyDynamics::CalcBodyToBaseCoordinates(*model_, q, body_id_[kDof - 1], com_position_[kDof - 1], true);
+  return RigidBodyDynamics::CalcBodyToBaseCoordinates(*model_, q, body_id_[kDof - 1], ee_position_, true);
 }
 
 Eigen::Matrix3d FrankaPandaModel::getRotation(const Eigen::VectorXd &q)
@@ -115,6 +115,8 @@ void FrankaPandaModel::initModel()
   com_position_[4] = Eigen::Vector3d(0.0013, 0.0423, 0.9243);
   com_position_[5] = Eigen::Vector3d(0.0421, -0.0103, 1.0482);
   com_position_[6] = Eigen::Vector3d(0.1, -0.0120, 0.9536);
+  ee_position_ = Eigen::Vector3d(0.0880, 0, 0.9260);
+  ee_position_ -= global_joint_position[6];
 
   for (int i = 0; i < kDof; i++)
     com_position_[i] -= global_joint_position[i];

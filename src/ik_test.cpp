@@ -19,20 +19,59 @@ int main(int argc, char **argv)
 
   ROS_INFO("Hello world!");
 
-  char g;
-  std::cin >> g;
+  Eigen::Affine3d target_global_transform, target_local_transform;
+  Eigen::Vector3d target_global_force, target_global_torque;
+  Eigen::Vector3d target_local_force, target_local_torque;
+
+  // LEFT
+//  target_global_transform.matrix() <<
+//                             1,           0,           0,         0.6,
+//                             0, 6.12323e-17,          -1,         0.2,
+//                             0,           1, 6.12323e-17,        0.85,
+//                             0,           0,           0,           1;
+  // RIGHT
+  target_global_transform.matrix() <<
+                             1,           0,           0,         0.6,
+                             0, 6.12323e-17,           1,        -0.2,
+                             0,          -1, 6.12323e-17,        0.85,
+                             0,           0,           0,           1;
+
+  // LEFT
+//  target_global_force <<          0,        -1.75,        0.35 ;
+//  target_global_torque << 4.33681e-18,           0,           0;
+
+  // RIGHT
+  target_global_force <<          0,        1.75,        0.35 ;
+  target_global_torque << 4.33681e-18,           0,           0;
+
+
   RobotModelPtr model = std::make_shared<FrankaPandaModel>();
 
-  Eigen::Vector3d target_point;
-  target_point << 0.65, -0.15, 0.4;
-  Eigen::Matrix<double, 6, 1> target_wrench;
-  target_wrench << 0.0, 9.8, 1.2, 0., 0., 0.;
-  Eigen::Matrix3d target_orientation;
-  target_orientation
-      << 1, 0 ,0,
-      0, 0, 1,
-      0, -1, 0;
+  Eigen::Affine3d right_arm_tf;
+  Eigen::Affine3d left_arm_tf;
+  right_arm_tf.translation() << 0.1481, -0.1559, 0.5168;
+  left_arm_tf.translation() << 0.1481, 0.1559, 0.5168;
+  left_arm_tf.linear() = Eigen::AngleAxisd( -M_PI_4, Eigen::Vector3d::UnitX()).toRotationMatrix();
+  right_arm_tf.linear() = Eigen::AngleAxisd( M_PI_4, Eigen::Vector3d::UnitX()).toRotationMatrix();
 
+
+  target_local_transform = right_arm_tf.inverse() * target_global_transform;
+  target_local_force = right_arm_tf.linear().transpose() * target_global_force;
+  target_local_torque = right_arm_tf.linear().transpose() * target_global_torque;
+
+  Eigen::Vector3d target_point;
+  //target_point << 0.65, -0.15, 0.4;
+  Eigen::Matrix<double, 6, 1> target_wrench;
+  //target_wrench << 0.0, 9.8, 1.2, 0., 0., 0.;
+  Eigen::Matrix3d target_orientation;
+//  target_orientation
+//      << 1, 0 ,0,
+//      0, 0, 1,
+//      0, -1, 0;
+
+  target_point = target_local_transform.translation();
+  target_wrench << target_local_force, target_local_torque;
+  target_orientation = target_local_transform.linear();
 
   auto var = std::make_shared<IKJointVariables>(model);
   auto constraint = std::make_shared<IkConstraint2>(model);
@@ -69,11 +108,11 @@ int main(int argc, char **argv)
   // 3 . solve
   ipopt.Solve(nlp);
   Eigen::VectorXd x = nlp.GetOptVariables()->GetValues();
-  std::cout << x.transpose() << std::endl;
+  std::cout << (x * 180./M_PI).transpose() << std::endl;
 
   // 4. test if solution correct
-  double eps = 1e-5; //double precision
-  assert(1.0-eps < x(0) && x(0) < 1.0+eps);
-  assert(0.0-eps < x(1) && x(1) < 0.0+eps);
+  //double eps = 1e-5; //double precision
+  //assert(1.0-eps < x(0) && x(0) < 1.0+eps);
+  //assert(0.0-eps < x(1) && x(1) < 0.0+eps);
 
 }
