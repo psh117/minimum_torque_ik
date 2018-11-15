@@ -10,6 +10,11 @@ void IKForce::setBaseFrameTransform(const Eigen::Affine3d& transform)
   base_frame_transform_ = transform;
 }
 
+void IKForce::setIntialConfiguration(const Eigen::VectorXd& q0)
+{
+  initial_configuration_ = q0;
+}
+
 void IKForce::setTargets(const std::vector<TargetTransformWrench>& targets)
 {
   target_ = targets;
@@ -53,10 +58,10 @@ void IKForce::solve()
     target_wrench << local.force_, local.torque_;
     target_orientation = local.transform_.linear();
 
-    auto var = std::make_shared<ifopt::IKJointVariables>(model_);
-    auto constraint_pos = std::make_shared<ifopt::IkConstraintPosition>(model_);
-    auto constraint_ori = std::make_shared<ifopt::IkConstraintOrientation>(model_);
-    auto cost = std::make_shared<ifopt::IkCost>(model_);
+    std::shared_ptr<ifopt::IKJointVariables> var = std::make_shared<ifopt::IKJointVariables>(model_);
+    std::shared_ptr<ifopt::IkConstraintPosition> constraint_pos = std::make_shared<ifopt::IkConstraintPosition>(model_);
+    std::shared_ptr<ifopt::IkConstraintOrientation> constraint_ori = std::make_shared<ifopt::IkConstraintOrientation>(model_);
+    std::shared_ptr<ifopt::IkCost> cost = std::make_shared<ifopt::IkCost>(model_);
 
     cost->setTargetWrench(target_wrench);
     constraint_pos->setTargetTranslation(target_point);

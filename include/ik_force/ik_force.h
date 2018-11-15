@@ -29,6 +29,7 @@ public:
   IKForce(RobotModelPtr model);
 
   void setBaseFrameTransform(const Eigen::Affine3d& transform);
+  void setIntialConfiguration(const Eigen::VectorXd& q0);
   void setTargets(const std::vector<TargetTransformWrench>& targets);
   void addTarget(const TargetTransformWrench& target);
   void clearTarget();

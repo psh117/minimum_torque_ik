@@ -28,7 +28,12 @@ TEST(IKSolverTest, testCase1)
 
   RobotModelPtr model = std::make_shared<FrankaPandaModel>();
 
+  Eigen::VectorXd q0;
+  q0.setZero(7);
+
   IKForce ik_force(model);
+
+  ik_force.setIntialConfiguration(q0);
   ik_force.setBaseFrameTransform(right_arm_tf);
   ik_force.addTarget(target);
   ik_force.solve();
@@ -41,9 +46,9 @@ TEST(IKSolverTest, testCase1)
 
   auto x_global = right_arm_tf * x_1;
 
-  EXPECT_NEAR(x_global(0), 0.6, 0.001);
-  EXPECT_NEAR(x_global(1), -0.2, 0.001);
-  EXPECT_NEAR(x_global(2), 0.85, 0.001);
+  EXPECT_NEAR(x_global(0), 0.6, 0.0015);
+  EXPECT_NEAR(x_global(1), -0.2, 0.0015);
+  EXPECT_NEAR(x_global(2), 0.85, 0.0015);
 }
 
 // Run all the tests that were declared with TEST()

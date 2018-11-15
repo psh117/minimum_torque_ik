@@ -39,7 +39,7 @@ public:
 private:
   RobotModelPtr model_;
   Eigen::Vector3d target_translation_;
-  double epsilon_ {0.0001};  ///< IK solution precision
+  double epsilon_ {0.0005};  ///< IK solution precision
 };
 
 class IkConstraintOrientation : public ConstraintSet {
