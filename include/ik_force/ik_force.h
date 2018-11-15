@@ -45,5 +45,4 @@ private:
   std::vector<TargetTransformWrench> target_; ///< Target transform and wrench
   std::vector<Eigen::VectorXd> solution_;
   Eigen::VectorXd initial_configuration_; ///< $q_0$
-
 };

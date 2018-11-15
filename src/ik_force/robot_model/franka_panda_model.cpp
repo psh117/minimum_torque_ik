@@ -62,7 +62,6 @@ Eigen::MatrixXd FrankaPandaModel::getJointLimit()
 
 Eigen::VectorXd FrankaPandaModel::getInitialConfiguration()
 {
-
 }
 
 int FrankaPandaModel::getDof()
