@@ -1,6 +1,6 @@
 // Bring in my package's API, which is what I'm testing
 #include "ik_force/ik_force.h"
-#include "ik_force/franka_panda_model.h"
+#include "ik_force/robot_model/franka_panda_model.h"
 
 #include <ros/ros.h>
 // Bring in gtest

@@ -6,8 +6,8 @@
 #include <ifopt/ipopt_solver.h>
 #include <ifopt/test_vars_constr_cost.h>
 
-#include "ik_force/robot_model.h"
-#include "ik_force/ik_optimization_var_constr_cost.h"
+#include "ik_force/robot_model/robot_model.h"
+#include "ik_force/optimization/ik_optimization_var_constr_cost.h"
 
 
 struct TargetTransformWrench

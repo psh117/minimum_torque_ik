@@ -33,7 +33,8 @@ include_directories(
 ## Declare a C++ library
 add_library(${PROJECT_NAME}
   src/${PROJECT_NAME}/ik_force.cpp
-  src/${PROJECT_NAME}/franka_panda_model.cpp
+  src/${PROJECT_NAME}/robot_model/franka_panda_model.cpp
+  src/${PROJECT_NAME}/optimization/ik_optimization_var_constr_cost.cpp
 )
 
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
